@@ -40,7 +40,8 @@ PFLAGS="-Anocheckjdk -Aignorejdkastub -AuseDefaultsForUncheckedCode=source\
 JAIFDIR="${WORKDIR}/jaifs"
 SYMDIR="${WORKDIR}/sym"
 
-set -o pipefail
+##Not working on Travis for some reason
+#set -o pipefail
 
 rm -rf ${BOOTDIR} ${BINDIR} ${WORKDIR}/log
 mkdir -p ${BOOTDIR} ${BINDIR} ${WORKDIR}/log
