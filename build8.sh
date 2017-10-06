@@ -81,12 +81,14 @@ find ${SI_DIRS} -maxdepth 1 -name '*\.java' -print | xargs\
 # Build the remaining packages one at a time because building all of
 # them together makes the compiler run out of memory.
 echo "build one package at a time w/processors on"
+JAVA_FILES=""
 for d in ${DIRS} ; do
     ls $d/*.java 2>/dev/null || continue
     echo :$d: `echo $d/*.java | wc -w` files
-    ${CF_JAVAC} -g -d ${BINDIR} ${JFLAGS} -processor ${PROCESSORS} ${PFLAGS}\
- "$d"/*.java 2>&1 | tee ${WORKDIR}/log/`echo "$d" | tr / .`.log
+    JAVA_FILES=${JAVA_FILES} + " $d"/*.java
 done
+${CF_JAVAC} -g -d ${BINDIR} ${JFLAGS} -processor ${PROCESSORS} ${PFLAGS}\
+ ${JAVA_FILES} 2>&1 | tee ${WORKDIR}/log/`echo "$d" | tr / .`.log
 
 # Check logfiles for errors and list any source files that failed to
 # compile.
