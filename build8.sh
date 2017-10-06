@@ -34,8 +34,8 @@ CF_JAVAC="java -Xmx512m -jar ${CF_JAR} -Xbootclasspath/p:${BOOTDIR}"
 CP="${BINDIR}:${BOOTDIR}:${LT_BIN}:${TOOLSJAR}:${CF_BIN}:${CF_JAR}"
 JFLAGS="-XDignore.symbol.file=true -Xmaxerrs 20000 -Xmaxwarns 20000\
  -source 8 -target 8 -encoding ascii -cp ${CP}"
-PROCESSORS="nullness"
-#PROCESSORS="fenum,formatter,guieffect,i18n,i18nformatter,interning,nullness,signature"
+#PROCESSORS="nullness"
+PROCESSORS="fenum,formatter,guieffect,i18n,i18nformatter,interning,nullness,signature"
 PFLAGS="-Anocheckjdk -Aignorejdkastub -AuseDefaultsForUncheckedCode=source\
  -AprintErrorStack -Awarns -Afilenames  -AsuppressWarnings=all "
 JAIFDIR="${WORKDIR}/jaifs"
