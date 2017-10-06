@@ -23,5 +23,5 @@ export CHECKERFRAMEWORK=$ROOT/checker-framework
 
 ## Jdk
 
-(cd $CHECKERFRAMEWORK/checker/jdk && ./build8.sh)
+./build8.sh
 
