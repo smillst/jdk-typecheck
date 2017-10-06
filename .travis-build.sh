@@ -13,7 +13,7 @@ echo "Should next trigger downstream jobs."
 true
 
 ## Build Checker Framework
-(cd $ROOT && git clone --depth 1 https://github.com/typetools/checker-framework.git)
+(cd $ROOT && git clone --depth 1 -b filenames https://github.com/smillst/checker-framework.git)
 # This also builds annotation-tools and jsr308-langtools
 (cd $ROOT/checker-framework/ && ./.travis-build-without-test.sh downloadjdk)
 export CHECKERFRAMEWORK=$ROOT/checker-framework

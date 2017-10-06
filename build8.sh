@@ -59,6 +59,7 @@ if [ -z "${DIRS}" ] ; then
     echo "no annotated source files"
     exit 1
 fi
+echo "build one package at a time w/processors on"
 
 # The bootstrap JDK, built from the same source as the final result but
 # without any Checker Framework processors, obviates building the entire
@@ -84,9 +85,7 @@ find ${SI_DIRS} -maxdepth 1 -name '*\.java' -print | xargs\
 echo "build one package at a time w/processors on"
 JAVA_FILES=""
 for d in ${DIRS} ; do
-    ls $d/*.java 2>/dev/null || continue
-    echo :$d: `echo $d/*.java | wc -w` files
-    JAVA_FILES=${JAVA_FILES} + " $d"/*.java
+    JAVA_FILES="${JAVA_FILES} $d"/*.java
 done
 ${CF_JAVAC} -g -d ${BINDIR} ${JFLAGS} -processor ${PROCESSORS} ${PFLAGS}\
  ${JAVA_FILES} 2>&1 | tee ${WORKDIR}/log/`echo "$d" | tr / .`.log
