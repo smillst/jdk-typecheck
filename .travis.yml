@@ -1,0 +1,13 @@
+language: java
+jdk:
+  - oraclejdk8
+
+sudo: false
+
+## This is just to determine the time to do the background build.
+#  - GROUP=nothing
+
+script:  ./.travis-build.sh
+
+git:
+  depth: 3
