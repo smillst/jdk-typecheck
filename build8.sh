@@ -85,6 +85,7 @@ find ${SI_DIRS} -maxdepth 1 -name '*\.java' -print | xargs\
 echo "build one package at a time w/processors on"
 JAVA_FILES=""
 for d in ${DIRS} ; do
+    ls $d/*.java 2>/dev/null || continue
     JAVA_FILES="${JAVA_FILES} $d"/*.java
 done
 ${CF_JAVAC} -g -d ${BINDIR} ${JFLAGS} -processor ${PROCESSORS} ${PFLAGS}\
