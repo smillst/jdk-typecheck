@@ -18,23 +18,23 @@ export CHECKERFRAMEWORK=$ROOT/checker-framework
 ## Jdk
 
 if [[ "$1" == "formatter" ]]; then
-  PROCESSOR=formatter ./build8.sh
+  PROCESSORS=formatter ./build8.sh
 elif [[ "$1" == "interning" ]]; then
-  PROCESSOR=interning ./build8.sh
+  PROCESSORS=interning ./build8.sh
 elif [[ "$1" == "lock" ]]; then
-  PROCESSOR=lock ./build8.sh
+  PROCESSORS=lock ./build8.sh
 elif [[ "$1" == "nullness-fbc" ]]; then
-  PROCESSOR=nullness ./build8.sh
+  PROCESSORS=nullness ./build8.sh
 elif [[ "$1" == "nullness-raw" ]]; then
-  PROCESSOR=org.checkerframework.checker.nullness.NullnessRawnessChecker ./build8.sh
+  PROCESSORS=org.checkerframework.checker.nullness.NullnessRawnessChecker ./build8.sh
 elif [[ "$1" == "regex" ]]; then
-  PROCESSOR=regex ./build8.sh
+  PROCESSORS=regex ./build8.sh
 elif [[ "$1" == "signature" ]]; then
-  PROCESSOR=signature ./build8.sh
+  PROCESSORS=signature ./build8.sh
 elif [[ "$1" == "index" ]]; then
-  PROCESSOR=index ./build8.sh
+  PROCESSORS=index ./build8.sh
 elif [[ "$1" == "value" ]]; then
-  PROCESSOR=org.checkerframework.common.value.ValueChecker ./build8.sh
+  PROCESSORS=org.checkerframework.common.value.ValueChecker ./build8.sh
 else
   echo "Bad argument '$1' to travis-build.sh"
   false
