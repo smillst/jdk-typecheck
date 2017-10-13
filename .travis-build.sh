@@ -2,15 +2,9 @@
 ROOT=$TRAVIS_BUILD_DIR/..
 
 # Required argument $1 is one of:
-#   formatter, interning, lock, nullness, regex, signature, nothing
+#   formatter, interning, lock, nullness, regex, signature, value
 
 
-# Fail the whole script if any command fails
-set -e
-
-## Short version, intended to be used when triggering downstream Travis jobs.
-echo "Should next trigger downstream jobs."
-true
 
 ## Build Checker Framework
 (cd $ROOT && git clone --depth 1  https://github.com/typetools/checker-framework.git)
@@ -23,5 +17,27 @@ export CHECKERFRAMEWORK=$ROOT/checker-framework
 
 ## Jdk
 
-./build8.sh
+if [[ "$1" == "formatter" ]]; then
+  export PROCESSOR=formatter
+elif [[ "$1" == "interning" ]]; then
+  export PROCESSOR=interning
+elif [[ "$1" == "lock" ]]; then
+  export PROCESSOR=lock
+elif [[ "$1" == "nullness-fbc" ]]; then
+  export PROCESSOR=nullness
+elif [[ "$1" == "nullness-raw" ]]; then
+  export PROCESSOR=org.checkerframework.checker.nullness.NullnessRawnessChecker
+elif [[ "$1" == "regex" ]]; then
+  export PROCESSOR=regex
+elif [[ "$1" == "signature" ]]; then
+  export PROCESSOR=signature
+elif [[ "$1" == "index" ]]; then
+  export PROCESSOR=index
+elif [[ "$1" == "value" ]]; then
+  export PROCESSOR=org.checkerframework.common.value.ValueChecker
+else
+  echo "Bad argument '$1' to travis-build.sh"
+  false
+fi
 
+./build8.sh

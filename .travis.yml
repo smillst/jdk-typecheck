@@ -4,10 +4,18 @@ jdk:
 
 sudo: false
 
-## This is just to determine the time to do the background build.
-#  - GROUP=nothing
+env:
+  - GROUP=formatter
+  - GROUP=index
+  - GROUP=interning
+  - GROUP=lock
+  - GROUP=nullness-fbc
+  - GROUP=nullness-raw
+  - GROUP=regex
+  - GROUP=signature
+  - GROUP=value
 
-script:  ./.travis-build.sh
+script:  ./.travis-build.sh $GROUP
 
 git:
   depth: 3

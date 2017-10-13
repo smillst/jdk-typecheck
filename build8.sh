@@ -11,7 +11,7 @@ fi
 [ $? -eq 0 ] || (echo "CHECKERFRAMEWORK not set; exiting" && exit 1)
 
 # Compile all packages by default.
-${PACKAGES:="com java javax jdk org sun"}
+PACKAGES="com java javax jdk org sun"
 
 
 # parameters derived from environment
