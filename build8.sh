@@ -34,8 +34,8 @@ CF_JAVAC="java -Xmx512m -jar ${CF_JAR} -Xbootclasspath/p:${BOOTDIR}"
 CP="${BINDIR}:${BOOTDIR}:${LT_BIN}:${TOOLSJAR}:${CF_BIN}:${CF_JAR}"
 JFLAGS="-XDignore.symbol.file=true -Xmaxerrs 20000 -Xmaxwarns 20000\
  -source 8 -target 8 -encoding ascii -cp ${CP}"
-#PROCESSORS="nullness"
-PROCESSORS="fenum,formatter,guieffect,i18n,i18nformatter,interning,nullness,signature"
+PROCESSORS="org.checkerframework.common.value.ValueChecker"
+#PROCESSORS="fenum,formatter,guieffect,i18n,i18nformatter,interning,nullness,signature"
 PFLAGS="-Anocheckjdk -Aignorejdkastub -AuseDefaultsForUncheckedCode=source\
  -AprintErrorStack -Awarns -Afilenames  -AsuppressWarnings=all "
 JAIFDIR="${WORKDIR}/jaifs"
@@ -84,13 +84,13 @@ find ${SI_DIRS} -maxdepth 1 -name '*\.java' -print | xargs\
 # Build the remaining packages one at a time because building all of
 # them together makes the compiler run out of memory.
 echo "build one package at a time w/processors on"
-JAVA_FILES=""
+JAVA_FILES_ARG_FILE=${WORKDIR}/log/args.txt
 for d in ${DIRS} ; do
-    ls $d/*.java >/dev/null 2>&1 || continue
-    JAVA_FILES="${JAVA_FILES} $d"/*.java
+    ls $d/*.java >/dev/null || continue
+    ls $d/*.java >> ${JAVA_FILES_ARG_FILE}
 done
 ${CF_JAVAC} -g -d ${BINDIR} ${JFLAGS} -processor ${PROCESSORS} ${PFLAGS}\
- ${JAVA_FILES} 2>&1 | tee ${WORKDIR}/log/`echo "$d" | tr / .`.log
+ @${JAVA_FILES_ARG_FILE} 2>&1 | tee ${WORKDIR}/log/`echo "$d" | tr / .`.log
 
 # Check logfiles for errors and list any source files that failed to
 # compile.
