@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# Builds JDK 8 jar for Checker Framework by inserting annotations into
-# ct.sym.
-
 # ensure CHECKERFRAMEWORK set
 if [ -z "$CHECKERFRAMEWORK" ] ; then
     if [ -z "$CHECKER_FRAMEWORK" ] ; then
@@ -13,8 +10,9 @@ if [ -z "$CHECKERFRAMEWORK" ] ; then
 fi
 [ $? -eq 0 ] || (echo "CHECKERFRAMEWORK not set; exiting" && exit 1)
 
-# Debugging
-PRESERVE=1  # option to preserve intermediate files
+# Compile all packages by default.
+${PACKAGES:="com java javax jdk org sun"}
+
 
 # parameters derived from environment
 # TOOLSJAR and CTSYM derived from JAVA_HOME, rest from CHECKERFRAMEWORK
@@ -35,11 +33,9 @@ CP="${BINDIR}:${BOOTDIR}:${LT_BIN}:${TOOLSJAR}:${CF_BIN}:${CF_JAR}"
 JFLAGS="-XDignore.symbol.file=true -Xmaxerrs 20000 -Xmaxwarns 20000\
  -source 8 -target 8 -encoding ascii -cp ${CP}"
 PROCESSORS="org.checkerframework.common.value.ValueChecker"
-#PROCESSORS="fenum,formatter,guieffect,i18n,i18nformatter,interning,nullness,signature"
+#PROCESSORS="nullness"
 PFLAGS="-Anocheckjdk -Aignorejdkastub -AuseDefaultsForUncheckedCode=source\
  -AprintErrorStack -Awarns -Afilenames  -AsuppressWarnings=all "
-JAIFDIR="${WORKDIR}/jaifs"
-SYMDIR="${WORKDIR}/sym"
 
 ##Not working on Travis for some reason
 #set -o pipefail
@@ -48,30 +44,24 @@ rm -rf ${BOOTDIR} ${BINDIR} ${WORKDIR}/log
 mkdir -p ${BOOTDIR} ${BINDIR} ${WORKDIR}/log
 cd ${SRCDIR}
 
-DIRS=`find com java javax jdk org sun \( -name META_INF -o -name dc\
+DIRS=`find $PACKAGES \( -name META_INF -o -name dc\
  -o -name example -o -name jconsole -o -name pept -o -name snmp\
  -o -name internal -o -name security \) -prune -o -type d -print`
 SI_DIRS=`find java javax jdk org com sun \( -name META_INF -o -name dc\
  -o -name example -o -name jconsole -o -name pept -o -name snmp \) -prune\
  -o -type d \( -name internal -o -name security \) -print`
 
-if [ -z "${DIRS}" ] ; then
-    echo "no annotated source files"
-    exit 1
-fi
-
-${CF_JAVAC} -g -d ${BINDIR} ${JFLAGS} -processor ${PROCESSORS} ${PFLAGS}\
- ${JAVA_FILES} 2>&1 | tee ${WORKDIR}/log/`echo "$d" | tr / .`.log
+## Is this needed??
 # The bootstrap JDK, built from the same source as the final result but
 # without any Checker Framework processors, obviates building the entire
 # JDK source distribution.  You don't want to build the JDK from source.
-echo "build bootstrap JDK"
-find ${SI_DIRS} ${DIRS} -maxdepth 1 -name '*\.java' -print | xargs\
- ${LT_JAVAC} -g -d ${BOOTDIR} ${JFLAGS} -source 8 -target 8 -encoding ascii\
- -cp ${CP} | tee ${WORKDIR}/log/0.log
-[ $? -ne 0 ] && exit 1
-grep -q 'not found' ${WORKDIR}/log/0.log
-(cd ${BOOTDIR} && jar cf ../jdk.jar *)
+#echo "build bootstrap JDK"
+#find ${SI_DIRS} ${DIRS} -maxdepth 1 -name '*\.java' -print | xargs\
+# ${LT_JAVAC} -g -d ${BOOTDIR} ${JFLAGS} -source 8 -target 8 -encoding ascii\
+# -cp ${CP} | tee ${WORKDIR}/log/0.log
+#[ $? -ne 0 ] && exit 1
+#grep -q 'not found' ${WORKDIR}/log/0.log
+#(cd ${BOOTDIR} && jar cf ../jdk.jar *)
 
 # These packages are interdependent and cannot be compiled individually.
 # Compile them all together.
@@ -83,10 +73,10 @@ find ${SI_DIRS} -maxdepth 1 -name '*\.java' -print | xargs\
 
 # Build the remaining packages one at a time because building all of
 # them together makes the compiler run out of memory.
-echo "build one package at a time w/processors on"
+echo "typecheck"
 JAVA_FILES_ARG_FILE=${WORKDIR}/log/args.txt
 for d in ${DIRS} ; do
-    ls $d/*.java >/dev/null || continue
+    ls $d/*.java 2>&1 /dev/null || continue
     ls $d/*.java >> ${JAVA_FILES_ARG_FILE}
 done
 ${CF_JAVAC} -g -d ${BINDIR} ${JFLAGS} -processor ${PROCESSORS} ${PFLAGS}\
@@ -94,17 +84,7 @@ ${CF_JAVAC} -g -d ${BINDIR} ${JFLAGS} -processor ${PROCESSORS} ${PFLAGS}\
 
 # Check logfiles for errors and list any source files that failed to
 # compile.
-grep -q -l 'Compilation unit: ' "${WORKDIR}/log/*"
-if [ $? -ne 0 ] ; then
-    echo "failed" | tee ${WORKDIR}/log/2.log
-    cat "${WORKDIR}/log/*" | grep -l 'Compilation unit: ' | awk '{print$3}'\
- | sort -u | tee -a ${WORKDIR}/log/2.log
+grep 'Compilation unit: ' ${WORKDIR}/log/*
+if [ $? -ne 1 ] ; then
     exit 1
 fi
-
-# construct annotated ct.sym
-bash ${WORKDIR}/annotate-ct-sym.sh |& tee ${WORKDIR}/log/2.log
-
-cd ${WORKDIR}
-cp jdk.jar ${CF_DIST}/jdk8.jar
-[ ${PRESERVE} -eq 0 ] || rm -rf sym
