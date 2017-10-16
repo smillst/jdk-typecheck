@@ -13,9 +13,11 @@ env:
   - GROUP=signature
   - GROUP=value
 
-# These checkers complete in 50 min or more on the whole jdk, so split the jobs in two.
-  - GROUP=index-sun-javax
-  - GROUP=index-java-com-jdk-org
+# These checkers complete in 50 min or more on the whole jdk, so split the jobs
+# in two or three.
+  - GROUP=index-sun
+  - GROUP=index-com-javax
+  - GROUP=index-java-jdk-org
   - GROUP=nullness-fbc-sun-javax
   - GROUP=nullness-fbc-java-com-jdk-org
   - GROUP=nullness-raw-sun-javax

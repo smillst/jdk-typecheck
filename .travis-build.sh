@@ -31,16 +31,18 @@ elif [[ "$1" == "value" ]]; then
   PROCESSORS=org.checkerframework.common.value.ValueChecker ./build8.sh
 
 ## Spilt the jdk into two jobs.  The packages are grouped so that ~50% of the lines of code are in each job.
-elif [[ "$1" == "index-sun-javax" ]]; then
-  PROCESSORS=index PACKAGES="sun javax"./build8.sh
+elif [[ "$1" == "index-sun" ]]; then
+  PROCESSORS=index PACKAGES="sun" ./build8.sh
+elif [[ "$1" == "index-com-javax" ]]; then
+  PROCESSORS=index PACKAGES="com javax" ./build8.sh
+elif [[ "$1" == "index-java-jdk-org" ]]; then
+  PROCESSORS=index PACKAGES="java jdk org" ./build8.sh
 elif [[ "$1" == "nullness-fbc-sun-javax" ]]; then
   PROCESSORS=nullness PACKAGES="sun javax" ./build8.sh
-elif [[ "$1" == "nullness-raw-sun-javax" ]]; then
-  PROCESSORS=org.checkerframework.checker.nullness.NullnessRawnessChecker PACKAGES="sun javax" ./build8.sh
-elif [[ "$1" == "index-java-com-jdk-org" ]]; then
-  PROCESSORS=index PACKAGES="java com jdk org" ./build8.sh
 elif [[ "$1" == "nullness-fbc-java-com-jdk-org" ]]; then
   PROCESSORS=nullness PACKAGES="java com jdk org" ./build8.sh
+elif [[ "$1" == "nullness-raw-sun-javax" ]]; then
+  PROCESSORS=org.checkerframework.checker.nullness.NullnessRawnessChecker PACKAGES="sun javax" ./build8.sh
 elif [[ "$1" == "nullness-raw-java-com-jdk-org" ]]; then
   PROCESSORS=org.checkerframework.checker.nullness.NullnessRawnessChecker PACKAGES="java com jdk org" ./build8.sh
 else
