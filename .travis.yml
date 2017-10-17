@@ -16,8 +16,10 @@ env:
 # These checkers complete in 50 min or more on the whole jdk, so split the jobs
 # in two or three.
   - GROUP=index-sun
-  - GROUP=index-com-javax
-  - GROUP=index-java-jdk-org
+  - GROUP=index-cam
+  - GROUP=index-javax
+  - GROUP=index-java
+  - GROUP=index-jdk-org
   - GROUP=nullness-fbc-sun-javax
   - GROUP=nullness-fbc-java-com-jdk-org
   - GROUP=nullness-raw-sun-javax

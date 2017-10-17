@@ -33,10 +33,14 @@ elif [[ "$1" == "value" ]]; then
 ## Spilt the jdk into two jobs.  The packages are grouped so that ~50% of the lines of code are in each job.
 elif [[ "$1" == "index-sun" ]]; then
   PROCESSORS=index PACKAGES="sun" ./build8.sh
-elif [[ "$1" == "index-com-javax" ]]; then
-  PROCESSORS=index PACKAGES="com javax" ./build8.sh
-elif [[ "$1" == "index-java-jdk-org" ]]; then
-  PROCESSORS=index PACKAGES="java jdk org" ./build8.sh
+elif [[ "$1" == "index-com" ]]; then
+  PROCESSORS=index PACKAGES="com" ./build8.sh
+elif [[ "$1" == "index-javax" ]]; then
+  PROCESSORS=index PACKAGES="javax" ./build8.sh
+elif [[ "$1" == "index-java" ]]; then
+  PROCESSORS=index PACKAGES="java" ./build8.sh
+elif [[ "$1" == "index-jdk-org" ]]; then
+  PROCESSORS=index PACKAGES="jdk org" ./build8.sh
 elif [[ "$1" == "nullness-fbc-sun-javax" ]]; then
   PROCESSORS=nullness PACKAGES="sun javax" ./build8.sh
 elif [[ "$1" == "nullness-fbc-java-com-jdk-org" ]]; then
