@@ -16,7 +16,7 @@ env:
 # These checkers complete in 50 min or more on the whole jdk, so split the jobs
 # in two or three.
   - GROUP=index-sun
-  - GROUP=index-cam
+  - GROUP=index-com
   - GROUP=index-javax
   - GROUP=index-java
   - GROUP=index-jdk-org
